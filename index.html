@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Route Optimization in Navigation Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/home.css" />
+    <link rel="shortcut icon" href="assets/vincelogo.svg" type="image/x-icon" />
+</head>
+
+<body>
+    <header class="hero">
+        <div class="container">
+            <p class="eyebrow">
+                <i class="fa-solid fa-location-dot"></i>
+                Navigation Systems
+            </p>
+            <h1>Route Optimization in Navigation Systems</h1>
+            <p class="hero-text">
+                Have you ever wondered how Google Maps or Apple Maps finds the quickest route
+                to your destination? Navigation systems convert roads, intersections and travel time into a
+                <strong>weighted graph</strong>, then use shortest-path algorithms like
+                <strong>Dijkstra's Algorithm</strong> to compute the quickest travel time.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- SECTION 1 -->
+        <section class="card">
+            <h2>1. What Is a Weighted Graph?</h2>
+            <p>
+                In computer science, a <strong>weighted graph</strong> is a way of representing connected things where
+                each connection has a value or cost attached to it. A weighted graph is made of <strong>nodes</strong>
+                (points), <strong>edges</strong> (connections between points), and <strong>weights</strong> (the cost to
+                travel along an edge).
+            </p>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Weighted Graph Example</h3>
+                </div>
+
+                <div class="svg-shell">
+                    <svg viewBox="0 0 700 340" class="graph-svg" aria-label="Weighted graph example">
+                        <!-- edges -->
+                        <line x1="120" y1="170" x2="300" y2="90" class="edge" />
+                        <line x1="120" y1="170" x2="300" y2="250" class="edge" />
+                        <line x1="300" y1="90" x2="520" y2="170" class="edge" />
+                        <line x1="300" y1="250" x2="520" y2="170" class="edge" />
+                        <line x1="300" y1="90" x2="300" y2="250" class="edge" />
+
+                        <!-- weights -->
+                        <text x="210" y="115" class="weight-label">4</text>
+                        <text x="210" y="235" class="weight-label">2</text>
+                        <text x="410" y="115" class="weight-label">5</text>
+                        <text x="410" y="235" class="weight-label">3</text>
+                        <text x="315" y="177" class="weight-label">6</text>
+
+                        <!-- nodes -->
+                        <circle cx="120" cy="170" r="30" class="node" />
+                        <circle cx="300" cy="90" r="30" class="node" />
+                        <circle cx="300" cy="250" r="30" class="node" />
+                        <circle cx="520" cy="170" r="30" class="node" />
+
+                        <!-- node labels -->
+                        <text x="120" y="172" class="node-label">A</text>
+                        <text x="300" y="92" class="node-label">B</text>
+                        <text x="300" y="252" class="node-label">C</text>
+                        <text x="520" y="172" class="node-label">D</text>
+
+                        <!-- example callouts -->
+                        <text x="85" y="220" class="diagram-label">Node</text>
+                        <line x1="120" y1="205" x2="120" y2="190" class="label-line" />
+
+                        <text x="210" y="175" class="diagram-label">Edge</text>
+                        <line x1="253" y1="165" x2="290" y2="140" class="label-line" />
+
+                        <text x="460" y="70" class="diagram-label">Weight</text>
+                        <line x1="460" y1="78" x2="420" y2="102" class="label-line" />
+                    </svg>
+                </div>
+
+                <div class="legend">
+                    <span><span class="legend-dot legend-default"></span> Node</span>
+                    <span><span class="legend-line"></span> Edge</span>
+                    <span><span class="legend-weight">4</span> Weight</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section class="card">
+            <h2>2. Modeling the Road Network</h2>
+            <p>
+                To compute routes, a real road network is transformed into a graph:
+            </p>
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                    <h3>Nodes</h3>
+                    <p>Intersections or endpoints of roads.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-road"></i>
+                    <h3>Edges</h3>
+                    <p>The physical roads itself.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-stopwatch"></i>
+                    <h3>Weights</h3>
+                    <p>Travel cost such as time, distance, speed limits or traffic delay.</p>
+                </div>
+            </div>
+
+            <div class="split-grid">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Street Layout</h3>
+                        <p>How a road system looks in the real world</p>
+                    </div>
+
+                    <div class="svg-shell">
+                        <svg viewBox="0 0 500 340" class="graph-svg" aria-label="Street layout">
+                            <line x1="80" y1="70" x2="80" y2="270" class="road-line" />
+                            <line x1="240" y1="70" x2="240" y2="270" class="road-line" />
+                            <line x1="400" y1="70" x2="400" y2="270" class="road-line" />
+                            <line x1="80" y1="100" x2="400" y2="100" class="road-line" />
+                            <line x1="80" y1="200" x2="400" y2="200" class="road-line" />
+
+                            <circle cx="80" cy="100" r="9" class="intersection" />
+                            <circle cx="240" cy="100" r="9" class="intersection" />
+                            <circle cx="400" cy="100" r="9" class="intersection" />
+                            <circle cx="80" cy="200" r="9" class="intersection" />
+                            <circle cx="240" cy="200" r="9" class="intersection" />
+                            <circle cx="400" cy="200" r="9" class="intersection" />
+
+                            <text x="68" y="85" class="mini-label">A</text>
+                            <text x="228" y="85" class="mini-label">B</text>
+                            <text x="388" y="85" class="mini-label">C</text>
+                            <text x="68" y="225" class="mini-label">D</text>
+                            <text x="228" y="225" class="mini-label">E</text>
+                            <text x="388" y="225" class="mini-label">F</text>
+
+
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Converted Graph</h3>
+                        <p>The same layout represented as a graph</p>
+                    </div>
+
+                    <div class="svg-shell">
+                        <svg viewBox="0 0 500 340" class="graph-svg" aria-label="Converted weighted graph">
+                            <line x1="90" y1="90" x2="250" y2="90" class="edge" />
+                            <line x1="250" y1="90" x2="410" y2="90" class="edge" />
+                            <line x1="90" y1="250" x2="250" y2="250" class="edge" />
+                            <line x1="250" y1="250" x2="410" y2="250" class="edge" />
+                            <line x1="90" y1="90" x2="90" y2="250" class="edge" />
+                            <line x1="250" y1="90" x2="250" y2="250" class="edge" />
+                            <line x1="410" y1="90" x2="410" y2="250" class="edge" />
+
+                            <circle cx="90" cy="90" r="24" class="node" />
+                            <circle cx="250" cy="90" r="24" class="node" />
+                            <circle cx="410" cy="90" r="24" class="node" />
+                            <circle cx="90" cy="250" r="24" class="node" />
+                            <circle cx="250" cy="250" r="24" class="node" />
+                            <circle cx="410" cy="250" r="24" class="node" />
+
+                            <text x="90" y="94" class="node-label node-label-sm">A</text>
+                            <text x="250" y="94" class="node-label node-label-sm">B</text>
+                            <text x="410" y="94" class="node-label node-label-sm">C</text>
+                            <text x="90" y="254" class="node-label node-label-sm">D</text>
+                            <text x="250" y="254" class="node-label node-label-sm">E</text>
+                            <text x="410" y="254" class="node-label node-label-sm">F</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section class="card">
+            <h2>3. What Is Dijkstra's Algorithm?</h2>
+            <p>
+                Dijkstra's Algorithm is used to find the shortest path through a
+                weighted graph. It works by always choosing the
+                <strong>smallest known unvisited value</strong>, then exploring outward.
+            </p>
+
+            <div class="algorithm-foundation">
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <i class="fa-solid fa-play"></i>
+                        <h3>Start</h3>
+                        <p>Set the starting node to 0 and every other node to infinity.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fa-solid fa-arrow-down-short-wide"></i>
+                        <h3>Choose Smallest</h3>
+                        <p>Always move to the unvisited node with the smallest value.</p>
+                    </div>
+                    <div class="feature-box">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <h3>Update Neighbors</h3>
+                        <p>
+                            When you arrive at a node, look at all of its neighbors and
+                            update their values and compare if going through this node is shorter.
+                        </p>
+                    </div>
+                </div>
+
+                <p class="foundation-note">
+                    <strong>Think of it like this:</strong>
+                    Every time you arrive at a node, you check all connected nodes and
+                    see if going through this node gives a shorter distance. If it does,
+                    you update it.
+
+                </p>
+            </div>
+
+            <p>
+                In the demo below, each step explains <strong>why</strong> a node is chosen.
+                For this example <strong>A</strong> is our starting point and <strong>E</strong> is our destination”
+            </p>
+
+            <div class="interactive-demo">
+                <div class="panel">
+                    <div class="svg-shell">
+                        <svg viewBox="0 0 700 360" class="graph-svg" id="dijkstraGraph"
+                            aria-label="Interactive Dijkstra graph">
+                            <line id="edge-ab" x1="120" y1="180" x2="300" y2="90" class="edge demo-edge" />
+                            <line id="edge-ac" x1="120" y1="180" x2="300" y2="270" class="edge demo-edge" />
+                            <line id="edge-bd" x1="300" y1="90" x2="520" y2="90" class="edge demo-edge" />
+                            <line id="edge-cd" x1="300" y1="270" x2="520" y2="90" class="edge demo-edge" />
+                            <line id="edge-be" x1="300" y1="90" x2="520" y2="270" class="edge demo-edge" />
+                            <line id="edge-de" x1="520" y1="90" x2="520" y2="270" class="edge demo-edge" />
+
+                            <text x="205" y="120" class="weight-label">4</text>
+                            <text x="205" y="255" class="weight-label">2</text>
+                            <text x="410" y="75" class="weight-label">5</text>
+                            <text x="355" y="210" class="weight-label">8</text>
+                            <text x="380" y="135" class="weight-label">10</text>
+                            <text x="535" y="185" class="weight-label">2</text>
+
+                            <circle id="node-a" cx="120" cy="180" r="32" class="node demo-node node-start" />
+                            <circle id="node-b" cx="300" cy="90" r="32" class="node demo-node" />
+                            <circle id="node-c" cx="300" cy="270" r="32" class="node demo-node" />
+                            <circle id="node-d" cx="520" cy="90" r="32" class="node demo-node" />
+                            <circle id="node-e" cx="520" cy="270" r="32" class="node demo-node node-end" />
+
+                            <text x="120" y="184" class="node-label">A</text>
+                            <text x="300" y="94" class="node-label">B</text>
+                            <text x="300" y="274" class="node-label">C</text>
+                            <text x="520" y="94" class="node-label">D</text>
+                            <text x="520" y="274" class="node-label">E</text>
+
+                            <g id="dist-a">
+                                <rect x="85" y="225" width="70" height="34" rx="10" class="distance-box" />
+                                <text x="120" y="247" class="distance-text">0</text>
+                            </g>
+                            <g id="dist-b">
+                                <rect x="265" y="15" width="70" height="34" rx="10" class="distance-box" />
+                                <text x="300" y="37" class="distance-text">∞</text>
+                            </g>
+                            <g id="dist-c">
+                                <rect x="265" y="315" width="70" height="34" rx="10" class="distance-box" />
+                                <text x="300" y="337" class="distance-text">∞</text>
+                            </g>
+                            <g id="dist-d">
+                                <rect x="485" y="15" width="70" height="34" rx="10" class="distance-box" />
+                                <text x="520" y="37" class="distance-text">∞</text>
+                            </g>
+                            <g id="dist-e">
+                                <rect x="485" y="315" width="70" height="34" rx="10" class="distance-box" />
+                                <text x="520" y="337" class="distance-text">∞</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="step-badge" id="stepNumber">Step 1</div>
+                    <h3 id="stepTitle">Initialization</h3>
+                    <p id="stepDescription">
+                        We start at A, so A gets value 0. Every other node is set to infinity
+                        because we have not discovered a path to them yet.
+                    </p>
+
+                    <div class="distance-table">
+                        <div class="distance-row"><span>A</span><strong id="labelA">0</strong></div>
+                        <div class="distance-row"><span>B</span><strong id="labelB">∞</strong></div>
+                        <div class="distance-row"><span>C</span><strong id="labelC">∞</strong></div>
+                        <div class="distance-row"><span>D</span><strong id="labelD">∞</strong></div>
+                        <div class="distance-row"><span>E</span><strong id="labelE">∞</strong></div>
+                    </div>
+
+                    <div class="demo-controls">
+                        <button id="prevBtn" class="demo-btn demo-btn-secondary">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Previous
+                        </button>
+                        <button id="nextBtn" class="demo-btn demo-btn-primary">
+                            Next
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section class="card">
+            <h2>4. Putting the Graph and the Algorithm Together</h2>
+            <p>
+                Here you can see the street layout, the weighted graph from the street layout, and the route-selection
+                process. For this example <strong>A</strong> is our starting point and <strong>F</strong> is our
+                destination”
+            </p>
+            <p class="foundation-note">
+                <span class="def">Remember:</span>
+                <span class="def"><strong>Nodes</strong> = Intersections</span>
+                <span class="def"><strong>Edges</strong> = Physical Roads</span>
+                <span class="def"><strong>Weights</strong> = Travel Cost</span>
+            </p>
+
+            <div class="split-grid">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Street Network</h3>
+                        <p>The real-world road view</p>
+                    </div>
+
+                    <div class="svg-shell">
+                        <svg viewBox="0 0 560 340" class="graph-svg" aria-label="Street network example">
+                            <line x1="90" y1="80" x2="90" y2="270" class="road-line" />
+                            <line x1="250" y1="80" x2="250" y2="270" class="road-line" />
+                            <line x1="430" y1="80" x2="430" y2="270" class="road-line" />
+                            <line x1="90" y1="110" x2="430" y2="110" class="road-line" />
+                            <line x1="90" y1="210" x2="430" y2="210" class="road-line" />
+
+                            <circle cx="90" cy="110" r="10" class="intersection" />
+                            <circle cx="250" cy="110" r="10" class="intersection" />
+                            <circle cx="430" cy="110" r="10" class="intersection" />
+                            <circle cx="90" cy="210" r="10" class="intersection" />
+                            <circle cx="250" cy="210" r="10" class="intersection" />
+                            <circle cx="430" cy="210" r="10" class="intersection" />
+
+                            <text x="78" y="92" class="mini-label">A</text>
+                            <text x="238" y="92" class="mini-label">B</text>
+                            <text x="418" y="92" class="mini-label">C</text>
+                            <text x="78" y="236" class="mini-label">D</text>
+                            <text x="238" y="236" class="mini-label">E</text>
+                            <text x="418" y="236" class="mini-label">F</text>
+
+                            <polyline points="90,110 250,110 250,210 430,210" class="route-line" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Auto Route Selection</h3>
+                        <p>Dijkstra's Algorithm in progress</p>
+                    </div>
+
+                    <div class="svg-shell">
+                        <svg viewBox="0 0 560 360" class="graph-svg" id="loopGraph"
+                            aria-label="Automatic route selection demo">
+                            <line id="loop-edge-ab" x1="100" y1="100" x2="260" y2="100" class="edge loop-edge" />
+                            <line id="loop-edge-bc" x1="260" y1="100" x2="430" y2="100" class="edge loop-edge" />
+                            <line id="loop-edge-ad" x1="100" y1="100" x2="100" y2="250" class="edge loop-edge" />
+                            <line id="loop-edge-be" x1="260" y1="100" x2="260" y2="250" class="edge loop-edge" />
+                            <line id="loop-edge-cf" x1="430" y1="100" x2="430" y2="250" class="edge loop-edge" />
+                            <line id="loop-edge-de" x1="100" y1="250" x2="260" y2="250" class="edge loop-edge" />
+                            <line id="loop-edge-ef" x1="260" y1="250" x2="430" y2="250" class="edge loop-edge" />
+
+                            <text x="180" y="87" class="weight-label">4</text>
+                            <text x="345" y="87" class="weight-label">6</text>
+                            <text x="82" y="180" class="weight-label">7</text>
+                            <text x="242" y="180" class="weight-label">2</text>
+                            <text x="412" y="180" class="weight-label">5</text>
+                            <text x="180" y="237" class="weight-label">5</text>
+                            <text x="345" y="237" class="weight-label">1</text>
+
+                            <circle id="loop-node-a" cx="100" cy="100" r="25" class="node loop-node node-start" />
+                            <circle id="loop-node-b" cx="260" cy="100" r="25" class="node loop-node" />
+                            <circle id="loop-node-c" cx="430" cy="100" r="25" class="node loop-node" />
+                            <circle id="loop-node-d" cx="100" cy="250" r="25" class="node loop-node" />
+                            <circle id="loop-node-e" cx="260" cy="250" r="25" class="node loop-node" />
+                            <circle id="loop-node-f" cx="430" cy="250" r="25" class="node loop-node node-end" />
+
+                            <text x="100" y="104" class="node-label node-label-sm">A</text>
+                            <text x="260" y="104" class="node-label node-label-sm">B</text>
+                            <text x="430" y="104" class="node-label node-label-sm">C</text>
+                            <text x="100" y="254" class="node-label node-label-sm">D</text>
+                            <text x="260" y="254" class="node-label node-label-sm">E</text>
+                            <text x="430" y="254" class="node-label node-label-sm">F</text>
+                        </svg>
+                    </div>
+
+                    <div class="result-note" id="loopCaption">
+                        Starting from A...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section class="card">
+            <h2>5. The Complete Process Cycle</h2>
+            <ol class="process-list">
+                <li>User inputs a destination</li>
+                <li>The system maps the road network to a weighted graph</li>
+                <li>Dijkstra's Algorithm computes shortest paths</li>
+                <li>Destination node is reached with minimum travel cost</li>
+                <li>The path is reconstructed and is displayed</li>
+            </ol>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section class="card">
+            <h2>6. Real-World Behavior of Navigation Systems</h2>
+
+            <p>
+                In real navigation systems, route optimization is not a one-time calculation.
+                It is a <strong>continuous process</strong> that constantly adapts to changing conditions.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <i class="fa-solid fa-traffic-light"></i>
+                    <h3>Traffic...</h3>
+                    <p>
+                        Edge weights are continuously updated using real-time traffic data,
+                        meaning the “cost” of a road can change at any moment.
+                    </p>
+                </div>
+
+                <div class="feature-box">
+                    <i class="fa-solid fa-ban"></i>
+                    <h3>Road Constraints</h3>
+                    <p>
+                        One-way streets, turn restrictions, and construction are built
+                        directly into the graph so invalid routes are never considered.
+                    </p>
+                </div>
+
+                <div class="feature-box">
+                    <i class="fa-solid fa-rotate"></i>
+                    <h3>Continuous Recalculation</h3>
+                    <p>
+                        If traffic changes or you miss a turn, the system reruns
+                        the algorithm and finds a new quickest route in real time.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card conclusion">
+            <h2>Conclusion</h2>
+            <p>
+                Navigation systems like Google Maps and Apple Maps determine the most optimal route by modeling road
+                networks as weighted graphs and applying Dijkstra's Algorithm to find the shortest travel cost.
+                While Dijkstra's Algorithm guarentees an optimal path under fixed condition, the real world is
+                constantly changing. Traffic, construction, and user movement all affect the network, so the system
+                must continusly update to provide the most optimal route in real time.
+            </p>
+        </section>
+    </main>
+    <script src="js/home.js"></script>
+</body>
+
+</html>
