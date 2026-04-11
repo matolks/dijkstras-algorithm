@@ -1,7 +1,9 @@
 # Route Optimization with Dijkstra’s Algorithm
 
 ## Overview
-This project is a visual and conceptual explanation of how modern navigation systems compute optimal routes using **Dijkstra’s Algorithm**. It demonstrates how real-world road networks are modeled as **weighted graphs** and how shortest-path computation determines the most efficient route.
+This project is a technical description of route optimization in modern navigation systems. It explains how road networks are represented as weighted graphs and how Dijkstra’s Algorithm computes the lowest-cost path between locations.
+
+The document focuses on the internal operation of the system—modeling, computation, and dynamic updates—rather than user interaction. It is written for a general audience and uses visualizations to make abstract computational processes more accessible.
 
 ---
 
