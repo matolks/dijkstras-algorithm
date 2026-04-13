@@ -5,7 +5,7 @@ const steps = [
     number: "Step 1",
     title: "Initialization",
     description:
-      "We start at A, so A gets value 0. Every other node is set to infinity because we have not discovered a path to them yet.",
+      "The algorithm initializes by setting the distance to node A to 0 and all other nodes are set to infinity.",
     distances: { A: "0", B: "∞", C: "∞", D: "∞", E: "∞" },
     currentNodes: ["a"],
     visitedNodes: [],
@@ -14,9 +14,9 @@ const steps = [
   },
   {
     number: "Step 2",
-    title: "Update From A",
+    title: "Relaxation from A",
     description:
-      "From A, we can reach B with cost 4 and C with cost 2. These become the first known distances, and we can set their values.",
+      "From node A, the algorithm can reach its neighbors B with cost 4 and C with cost 2. Since their values were infinity, their values get set.",
     distances: { A: "0", B: "4", C: "2", D: "∞", E: "∞" },
     currentNodes: ["a"],
     visitedNodes: ["a"],
@@ -25,9 +25,9 @@ const steps = [
   },
   {
     number: "Step 3",
-    title: "Choose C",
+    title: "Selection and Relaxation",
     description:
-      "We choose C here because 2 is less than B's 4. From C, we can now reach D so we can set its known value to 10 (2+8).",
+      "The algorithm can choose from B or C now. 2 < 4 so the algorithm selects C and does relaxation. This discovers D.",
     distances: { A: "0", B: "4", C: "2", D: "10", E: "∞" },
     currentNodes: ["c"],
     visitedNodes: ["a", "c"],
@@ -36,9 +36,9 @@ const steps = [
   },
   {
     number: "Step 4",
-    title: "Choose B",
+    title: "Selection and Relaxation",
     description:
-      "Now B is the smallest unvisited node with value 4, so we choose it next. From B, we can reach both E and D. For D, its current value is 10, but we see if you go though B it can be reached in 9. So, we update it since 9 < 10. E was unreach previously so we can set its known value to 14",
+      "The algorithm can choose from B or D. 4 < 10, so the algorithm selects B and does relaxation. From B, the neighbors are both E and D. E was unknown so the algorithm sets its value. D has a known value of 10, but since D can be reached in 9 going though B the algorithm updates it.",
     distances: { A: "0", B: "4", C: "2", D: "9", E: "14" },
     currentNodes: ["b"],
     visitedNodes: ["a", "c", "b"],
@@ -47,9 +47,9 @@ const steps = [
   },
   {
     number: "Step 5",
-    title: "Choose D",
+    title: "Selection and Relaxation",
     description:
-      "D is now the smallest unvisited node with value 9, so it is selected next. From D, we find a shorter path to E, improving E from 14 down to 11.",
+      "The algorithm can choose from D or E now. 9 < 14, D is selected. From D, the algorithm finds a shorter path to E.",
     distances: { A: "0", B: "4", C: "2", D: "9", E: "11" },
     currentNodes: ["d"],
     visitedNodes: ["a", "c", "b", "d"],
@@ -58,9 +58,9 @@ const steps = [
   },
   {
     number: "Step 6",
-    title: "Reach E",
+    title: "Termination",
     description:
-      "E now has the smallest final value, 11, so the shortest route is complete. By tracing back through the best updates, the shortest path is A → B → D → E.",
+      "E now has the smallest final value, 11, so the route optimization is complete. The shortest path is A → B → D → E.",
     distances: { A: "0", B: "4", C: "2", D: "9", E: "11" },
     currentNodes: ["e"],
     visitedNodes: ["a", "c", "b", "d", "e"],
@@ -159,24 +159,20 @@ renderStep(currentStep);
 
 const loopFrames = [
   {
-    caption: "Selecting from A...",
     activeNodes: ["a"],
     activeEdges: ["ab", "ad"],
   },
   {
-    caption: "B is chosen because cost 4 is smaller than cost 7.",
     activeNodes: ["b"],
     activeEdges: ["ab", "be", "bc"],
     visitedNodes: ["a"],
   },
   {
-    caption: "E is selected next from B because it gives the best new cost.",
     activeNodes: ["e"],
     activeEdges: ["ab", "be", "ef", "de"],
     visitedNodes: ["a", "b"],
   },
   {
-    caption: "F becomes the destination with the shortest route A → B → E → F.",
     activeNodes: ["f"],
     routeNodes: ["a", "b", "e", "f"],
     routeEdges: ["ab", "be", "ef"],
@@ -185,7 +181,6 @@ const loopFrames = [
 
 const loopNodeIds = ["a", "b", "c", "d", "e", "f"];
 const loopEdgeIds = ["ab", "bc", "ad", "be", "cf", "de", "ef"];
-const loopCaption = document.getElementById("loopCaption");
 let loopIndex = 0;
 
 function resetLoopDemo() {
@@ -202,7 +197,6 @@ function resetLoopDemo() {
 function renderLoopFrame(index) {
   const frame = loopFrames[index];
   resetLoopDemo();
-  loopCaption.textContent = frame.caption;
   loopEdgeIds.forEach((id) => {
     document.getElementById(`loop-edge-${id}`).classList.add("edge-faded");
   });
@@ -242,4 +236,4 @@ renderLoopFrame(loopIndex);
 setInterval(() => {
   loopIndex = (loopIndex + 1) % loopFrames.length;
   renderLoopFrame(loopIndex);
-}, 7500);
+}, 1500);
