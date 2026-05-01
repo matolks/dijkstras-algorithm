@@ -30,20 +30,430 @@
             </p>
             <h1>How to Find the Shortest Path Using Dijkstra's Algorithm</h1>
             <p class="hero-text">
-                Follow this guide to manually compute the shortest route between two locations
-                using a weighted graph. This process mirrors how navigation systems determine
-                optimal paths.
+                Use this guide to manually find the <strong>shortest path</strong> between two locations
+                using a <strong>weighted graph</strong>. This same process is how navigation
+                systems compare roads, travel time, and different routes before reccomending a path.
             </p>
         </div>
     </header>
     <!-- MAIN -->
-    <main class="container">
+    <main class="container instruction-page">
+        <!-- SECTION 1 -->
+        <section class="card guide-overview">
+            <h2>Before You Start</h2>
+            <div class="overview-grid">
+                <div>
+                    <h3>Purpose</h3>
+                    <p>Find the shortest path from a starting node to a destination node by updating known route
+                        <strong>travel-costs</strong> until the destination is finalized.
+                    </p>
+                </div>
+                <div>
+                    <h3>Estimated Time</h3>
+                    <p>Around 10-15 minutes for a first attempt. Then roughly 5 minutes after the process becomes
+                        familiar.</p>
+                </div>
+                <div>
+                    <h3>Workspace Setup</h3>
+                    <p>Keep the graph and table visible at the same time. Each value in the table must come from a
+                        specific edge on the graph, so seeing both at once prevents incorrect updates.</p>
+                </div>
+            </div>
+            <div class="notice warning-box"><i class="fa-solid fa-triangle-exclamation"></i>
+                <div><strong>Important limitation:</strong> Use Dijkstra's Algorithm only when every <strong>edge
+                        weight</strong> is positive. Negative weights will make this process give the wrong answer.
+                </div>
+            </div>
+            <p class="section-rationale">The six steps below preview the whole process before going into more detail.
+                You start by setting up the graph, then record starting distances. Next, you repeatedly choose the
+                smallest current distance of unvisited node and update nearby nodes. Continue until the destination is
+                finalized and trace the finished route.</p>
+            <div class="phase-strip" aria-label="Major phases of the process"><span><strong>1</strong> Set up the
+                    graph</span><span><strong>2</strong> Initialize distances</span><span><strong>3</strong> Select the
+                    smallest node</span><span><strong>4</strong> Update neighbors</span><span><strong>5</strong>
+                    Finalize
+                    Destination</span><span><strong>6</strong> Trace the route</span></div>
+        </section>
+        <!-- SECTION 2 -->
         <section class="card">
-            <h2>Instructions</h2>
-            <p>
-                Step-by-step content will go here.
+            <h2>Materials and Tools</h2>
+            <p>These materials and tools are necessary because Dijkstra's Algorithm is a tracking procedure. The
+                weighted graph shows which moves are possible/available, the distance table keeps track of the current
+                travel-costs found so far, and the visited node mark prevents you from revisiting nodes that have
+                already been
+                finalized.
             </p>
+            <div class="materials-grid">
+                <div class="material-card"><i class="fa-solid fa-diagram-project"></i><span>Weighted graph</span></div>
+                <div class="material-card"><i class="fa-solid fa-table"></i><span>Distance table</span></div>
+                <div class="material-card"><i class="fa-solid fa-check"></i><span>Visited-node marker</span></div>
+                <div class="material-card"><i class="fa-solid fa-rotate"></i><span>Update checks</span></div>
+            </div>
+        </section>
+        <!-- SECTION 3 -->
+        <section class="card">
+            <h2>Key Terms Used in the Steps</h2>
+            <p>These terms are used directly in the procedure and game below.</p>
+            <div class="term-grid">
+                <div class="term-card"><strong>Node</strong><span>A point in the graph. In a road network, a node
+                        represents an intersection.</span></div>
+                <div class="term-card"><strong>Edge</strong><span>A connection between two nodes. In a road network, an
+                        edge represents a road.</span></div>
+                <div class="term-card"><strong>Weight</strong><span>The cost of using an edge. In a road network this
+                        would represent time, distance, or traffic delay.</span></div>
+                <div class="term-card"><strong>Weighted Graph</strong><span>A structure made up of nodes and edges with
+                        weights to represent connections and relationships between places.</span></div>
+                <div class="term-card"><strong>Starting Node</strong><span>The node you start at. AKA your current
+                        locatio.n</span></div>
+                <div class="term-card"><strong>Destination node</strong><span>The node you are trying to get to. AKA
+                        where you are going.</span>
+                </div>
+                <div class="term-card"><strong>Travel-Cost</strong><span>The cost of the edges added up to get to your
+                        current position.</span></div>
+                <div class="term-card"><strong>Current distance</strong><span>The best known total travel cost from the
+                        start
+                        node to another node so far.</span></div>
+                <div class="term-card"><strong>Shortest Path</strong><span>The route using the least travel-cost to get
+                        to the destination, or node</span></div>
+                <div class="term-card"><strong>Visited node</strong><span>A node whose shortest path has been
+                        finalized.</span></div>
+                <div class="term-card"><strong>Previous node</strong><span>The node used immediately before the current
+                        node on the best known route.</span></div>
+            </div>
+        </section>
+        <!-- SECTION 4 -->
+        <section class="card">
+            <h2>Step-by-Step Instructions</h2>
+            <p>Follow the steps in order.</p>
+            <div class="instruction-workspace">
+                <div class="panel sticky-reference">
+                    <div class="svg-shell">
+                        <svg viewBox="0 0 720 390" class="graph-svg"
+                            aria-label="Weighted graph for instructional procedure">
+                            <line id="work-edge-ab" x1="120" y1="190" x2="300" y2="95" class="edge work-edge" />
+                            <line id="work-edge-ac" x1="120" y1="190" x2="300" y2="295" class="edge work-edge" />
+                            <line id="work-edge-bd" x1="300" y1="95" x2="525" y2="95" class="edge work-edge" />
+                            <line id="work-edge-cd" x1="300" y1="295" x2="525" y2="95" class="edge work-edge" />
+                            <line id="work-edge-be" x1="300" y1="95" x2="525" y2="295" class="edge work-edge" />
+                            <line id="work-edge-de" x1="525" y1="95" x2="525" y2="295" class="edge work-edge" />
+                            <text x="210" y="130" class="weight-label">4</text><text x="210" y="270"
+                                class="weight-label">2</text><text x="410" y="80" class="weight-label">5</text><text
+                                x="390" y="250" class="weight-label">8</text><text x="390" y="150"
+                                class="weight-label">10</text><text x="545" y="195" class="weight-label">2</text>
+                            <circle id="work-node-a" cx="120" cy="190" r="34" class="node work-node node-start" />
+                            <circle id="work-node-b" cx="300" cy="95" r="34" class="node work-node" />
+                            <circle id="work-node-c" cx="300" cy="295" r="34" class="node work-node" />
+                            <circle id="work-node-d" cx="525" cy="95" r="34" class="node work-node" />
+                            <circle id="work-node-e" cx="525" cy="295" r="34" class="node work-node node-end" />
+                            <text x="120" y="194" class="node-label">A</text><text x="300" y="99"
+                                class="node-label">B</text><text x="300" y="299" class="node-label">C</text><text
+                                x="525" y="99" class="node-label">D</text><text x="525" y="299"
+                                class="node-label">E</text>
+                        </svg>
+                    </div>
+                    <p class="caption"><strong>Figure 1.</strong> Follow this weighted graph for every step in the
+                        worked example.
+                    </p>
+                    <div class="mini-table-wrap">
+                        <table class="algorithm-table live-reference-table">
+                            <thead>
+                                <tr>
+                                    <th>Node</th>
+                                    <th>Current Distance</th>
+                                    <th>Previous Node</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A</td>
+                                    <td id="workDistA">—</td>
+                                    <td id="workPrevA">—</td>
+                                    <td id="workStatusA">Not started</td>
+                                </tr>
+                                <tr>
+                                    <td>B</td>
+                                    <td id="workDistB">—</td>
+                                    <td id="workPrevB">—</td>
+                                    <td id="workStatusB">Not started</td>
+                                </tr>
+                                <tr>
+                                    <td>C</td>
+                                    <td id="workDistC">—</td>
+                                    <td id="workPrevC">—</td>
+                                    <td id="workStatusC">Not started</td>
+                                </tr>
+                                <tr>
+                                    <td>D</td>
+                                    <td id="workDistD">—</td>
+                                    <td id="workPrevD">—</td>
+                                    <td id="workStatusD">Not started</td>
+                                </tr>
+                                <tr>
+                                    <td>E</td>
+                                    <td id="workDistE">—</td>
+                                    <td id="workPrevE">—</td>
+                                    <td id="workStatusE">Not started</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="caption" id="workTableCaption"><strong>Figure 2.</strong> Follow the table as it updates
+                        while you move through the steps.</p>
+                    <div class="step-nav-controls"><button id="prevWorkStep" class="demo-btn demo-btn-secondary"
+                            type="button"><i class="fa-solid fa-arrow-up"></i>Previous step</button><button
+                            id="nextWorkStep" class="demo-btn demo-btn-primary" type="button">Next step<i
+                                class="fa-solid fa-arrow-down"></i></button></div>
+                </div>
+                <div class="instruction-step-list">
+                    <div class="instruction-block" data-work-step="1">
+                        <h3><span>1</span> Create and initialize the table.</h3>
+                        <p class="command">Make a table with every node listed out and have a column for current
+                            distance, previous node, and status. To initizalize, identify A as the starting node and E
+                            as the destination node. Then set A's current distance to <strong>0</strong>, set every
+                            other current distance to <strong>∞</strong>, since their current distance is unknown.
+                            Leave previous node entries blank, and all other statuses as unvisted.</p>
+                        <p class="step-table-note">Table update: A = 0 &nbsp&nbsp&nbsp&nbsp&nbsp B, C, D, and E = ∞.</p>
+                        <p class="check"><i class="fa-solid fa-circle-check"></i> A is the only node with a known
+                            distance at the start.</p>
+                    </div>
+                    <div class="notice caution-box"><i class="fa-solid fa-circle-info"></i>
+                        <div><strong>Prevent a common mistake:</strong> Do not choose the smallest single edge. Choose
+                            the unvisited node with the smallest current distance from A.</div>
+                    </div>
+                    <div class="instruction-block" data-work-step="2">
+                        <h3><span>2</span> Visit A and update B and C.</h3>
+                        <p class="command">Mark A as visited. Look at the edges leaving A in Figure 1 and add A's
+                            distance, 0, to each edge weight.</p>
+                        <ul>
+                            <li>A → B costs 0 + 4 = <strong>4</strong>. Set B's current distance to 4 and previous node
+                                to A.</li>
+                            <li>A → C costs 0 + 2 = <strong>2</strong>. Set C's current distance to 2 and previous node
+                                to A.</li>
+                        </ul>
+                        <p class="step-table-note">Table update: B changes from ∞ to 4. C changes from ∞ to 2.</p>
+                        <p class="check"><i class="fa-solid fa-circle-check"></i> The smallest current distance of
+                            unvisted nodes is now C = 2.</p>
+                    </div>
+                    <div class="instruction-block" data-work-step="3">
+                        <h3><span>3</span> Visit C and update D.</h3>
+                        <p class="command">Choose C because C = 2 is smaller than B = 4. Look at the edges leaving C and
+                            add C's distance each edge.</p>
+                        <ul>
+                            <li>C → D costs 2 + 8 = <strong>10</strong>. Set D's current distance to 10 and previous
+                                node to C.</li>
+                        </ul>
+                        <p class="step-table-note">Table update: D changes from ∞ to 10 through C.</p>
+                        <p class="check"><i class="fa-solid fa-circle-check"></i> The smallest current distance of
+                            unvisted nodes is now B = 4.</p>
+                    </div>
+                    <div class="instruction-block" data-work-step="4">
+                        <h3><span>4</span> Visit B and revise D and E.</h3>
+                        <p class="command">Choose B because B = 4 is smaller than D = 10. Look at the edges leaving B
+                            and add B's distance each edge.</p>
+                        <ul>
+                            <li>B → D costs 4 + 5 = <strong>9</strong>. Since 9 is less than D's current 10, change D to
+                                9 and previous node to B.</li>
+                            <li>B → E costs 4 + 10 = <strong>14</strong>. Eet E's current distance to 14 and previous
+                                node to B.</li>
+                        </ul>
+                        <p class="step-table-note">Table update: D changes from 10 to 9. E changes from ∞ to 14.</p>
+                        <p class="check"><i class="fa-solid fa-circle-check"></i> This is a key correction step.
+                            Replace a longer route when a shorter route is found.</p>
+                    </div>
+                    <div class="instruction-block" data-work-step="5">
+                        <h3><span>5</span> Visit D and revise E.</h3>
+                        <p class="command">Choose D because D = 9 is smaller than E = 14. Look at the edges leaving D
+                            and add D's distance each edge.</p>
+                        <ul>
+                            <li>D → E costs 9 + 2 = <strong>11</strong>. Since 11 is less than E's current 14, change E
+                                to 11 and previous node to D.</li>
+                        </ul>
+                        <p class="step-table-note">Table update: E changes from 14 to 11.</p>
+                        <p class="check"><i class="fa-solid fa-circle-check"></i> E is now has the smallest current
+                            distance.
+                        </p>
+                    </div>
+                    <div class="instruction-block" data-work-step="6">
+                        <h3><span>6</span> Stop when E is selected.</h3>
+                        <p class="command">Select E. Stop because the destination has the smallest current distance
+                            among all unvisited nodes.</p>
+                        <p class="step-table-note">Table update: E is marked destination reached with a final distance
+                            of 11.</p>
+                        <p class="check"><i class="fa-solid fa-circle-check"></i> The smallest travel-cost from A to E
+                            is <strong>11</strong>.
+                        </p>
+                    </div>
+                    <div class="instruction-block" data-work-step="7">
+                        <h3><span>7</span> Trace the final route backward.</h3>
+                        <p class="command">Use the previous node column to trace from E back to A.</p>
+                        <ul>
+                            <li>E came from D.</li>
+                            <li>D came from B.</li>
+                            <li>B came from A.</li>
+                        </ul>
+                        <p class="result-note">Final Path: <strong>A → B → D → E</strong>. Total travel-cost:
+                            <strong>11</strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- SECTION 5 -->
+        <section class="card">
+            <h2>Practice Game: Apply the Same Process to a New Weighted Graph</h2>
+            <div class="game-grid transfer-game">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Figure 3. Weighted Graph</h3>
+                        <p>S is the starting node and T is the destination node.</p>
+                    </div>
+                    <div class="svg-shell"><svg viewBox="0 0 760 430" class="graph-svg" id="gameGraph"
+                            aria-label="Dijkstra practice game graph">
+                            <line id="game-edge-sa" x1="105" y1="210" x2="260" y2="105" class="edge game-edge" />
+                            <line id="game-edge-sb" x1="105" y1="210" x2="260" y2="315" class="edge game-edge" />
+                            <line id="game-edge-ba" x1="260" y1="315" x2="260" y2="105" class="edge game-edge" />
+                            <line id="game-edge-ac" x1="260" y1="105" x2="430" y2="105" class="edge game-edge" />
+                            <line id="game-edge-bc" x1="260" y1="315" x2="430" y2="105" class="edge game-edge" />
+                            <line id="game-edge-bd" x1="260" y1="315" x2="430" y2="315" class="edge game-edge" />
+                            <line id="game-edge-cd" x1="430" y1="105" x2="430" y2="315" class="edge game-edge" />
+                            <line id="game-edge-ct" x1="430" y1="105" x2="610" y2="210" class="edge game-edge" />
+                            <line id="game-edge-dt" x1="430" y1="315" x2="610" y2="210" class="edge game-edge" /><text
+                                x="180" y="145" class="weight-label">3</text><text x="180" y="292"
+                                class="weight-label">1</text><text x="278" y="210" class="weight-label">1</text><text
+                                x="345" y="88" class="weight-label">3</text><text x="370" y="215"
+                                class="weight-label">4</text><text x="345" y="302" class="weight-label">5</text><text
+                                x="448" y="210" class="weight-label">2</text><text x="520" y="130"
+                                class="weight-label">6</text><text x="520" y="300" class="weight-label">2</text>
+                            <circle id="game-node-s" cx="105" cy="210" r="34" class="node node-start game-node" />
+                            <circle id="game-node-a" cx="260" cy="105" r="34" class="node game-node" />
+                            <circle id="game-node-b" cx="260" cy="315" r="34" class="node game-node" />
+                            <circle id="game-node-c" cx="430" cy="105" r="34" class="node game-node" />
+                            <circle id="game-node-d" cx="430" cy="315" r="34" class="node game-node" />
+                            <circle id="game-node-t" cx="610" cy="210" r="34" class="node node-end game-node" /><text
+                                x="105" y="214" class="node-label">S</text><text x="260" y="109"
+                                class="node-label">A</text><text x="260" y="319" class="node-label">B</text><text
+                                x="430" y="109" class="node-label">C</text><text x="430" y="319"
+                                class="node-label">D</text><text x="610" y="214" class="node-label">T</text>
+                        </svg></div>
+                </div>
+                <div class="panel game-panel">
+                    <div class="step-badge" id="gameRound">Round 1</div>
+                    <h3 class="game-header" id="gameHeader">Select the starting node</h3>
+                    <p id="gamePrompt"></p>
+                    <div class="game-buttons" aria-label="Node selection buttons"><button
+                            class="demo-btn demo-btn-secondary game-choice" data-node="S">S</button><button
+                            class="demo-btn demo-btn-secondary game-choice" data-node="A">A</button><button
+                            class="demo-btn demo-btn-secondary game-choice" data-node="B">B</button><button
+                            class="demo-btn demo-btn-secondary game-choice" data-node="C">C</button><button
+                            class="demo-btn demo-btn-secondary game-choice" data-node="D">D</button><button
+                            class="demo-btn demo-btn-secondary game-choice" data-node="T">T</button></div>
+                    <div class="mini-table-wrap game-table">
+                        <table class="algorithm-table">
+                            <thead>
+                                <tr>
+                                    <th>Node</th>
+                                    <th>Current Distance</th>
+                                    <th>Previous Node</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>S</td>
+                                    <td id="gameDistS">0</td>
+                                    <td id="gamePrevS">—</td>
+                                    <td id="gameStatusS">Start</td>
+                                </tr>
+                                <tr>
+                                    <td>A</td>
+                                    <td id="gameDistA">∞</td>
+                                    <td id="gamePrevA">—</td>
+                                    <td id="gameStatusA">Unvisited</td>
+                                </tr>
+                                <tr>
+                                    <td>B</td>
+                                    <td id="gameDistB">∞</td>
+                                    <td id="gamePrevB">—</td>
+                                    <td id="gameStatusB">Unvisited</td>
+                                </tr>
+                                <tr>
+                                    <td>C</td>
+                                    <td id="gameDistC">∞</td>
+                                    <td id="gamePrevC">—</td>
+                                    <td id="gameStatusC">Unvisited</td>
+                                </tr>
+                                <tr>
+                                    <td>D</td>
+                                    <td id="gameDistD">∞</td>
+                                    <td id="gamePrevD">—</td>
+                                    <td id="gameStatusD">Unvisited</td>
+                                </tr>
+                                <tr>
+                                    <td>T</td>
+                                    <td id="gameDistT">∞</td>
+                                    <td id="gamePrevT">—</td>
+                                    <td id="gameStatusT">Destination</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="game-feedback" id="gameFeedback">Choose the starting node to begin.</p>
+                    <p class="game-summary" id="gameSummary">Goal: find the shortest path from S to T.</p>
+                    <button id="resetGameBtn" class="demo-btn demo-btn-primary">Reset Game</button>
+                </div>
+            </div>
+        </section>
+        <!-- SECTION 6 -->
+        <section class="card">
+            <h2>Troubleshooting / FAQ</h2>
+            <div class="faq-list">
+                <details>
+                    <summary>Do I have to create a table?</summary>
+                    <p>For a manual instructional set, yes. The table is the easiest way to track current distances,
+                        previous nodes, and visited nodes without relying on memory.</p>
+                </details>
+                <details>
+                    <summary>What if two unvisited nodes have the same smallest current distance?</summary>
+                    <p>Choose either one. If the distances are equal, both selections are valid as long as you keep
+                        updating neighbors correctly.</p>
+                </details>
+                <details>
+                    <summary>What if a new path to a node is longer than the current value?</summary>
+                    <p>Ignore the longer path. Only change a current distance when the new travel-cost is smaller.</p>
+                </details>
+                <details>
+                    <summary>Why do I need the previous node column?</summary>
+                    <p>The distance column gives the travel-cost. The previous node column gives the path that produced
+                        that cost.</p>
+                </details>
+                <details>
+                    <summary>Can I stop before visiting every node?</summary>
+                    <p>Yes. If you only need one destination, stop when that destination is selected as the
+                        smallest current distance unvisited node.</p>
+                </details>
+            </div>
+        </section>
+        <!-- SECTION 7 -->
+        <section class="card conclusion">
+            <h2>Glossary</h2>
+            <dl class="glossary-list">
+                <dt>Dijkstra's Algorithm</dt>
+                <dd>A shortest path algorithm that finds the smallest travel-cost path from a starting node to a
+                    destination node on a weighted graph with positive weights.</dd>
+                <dt>Weighted Graph</dt>
+                <dd>A structure made of nodes and edges with weights that represents relationships or connections.</dd>
+                <dt>Shortest path</dt>
+                <dd>The path with the smallest total travel-cost, not guarenteed to be the fewest number of edges.</dd>
+                <dt>Infinity (∞)</dt>
+                <dd>A placeholder meaning that no path to that node has been found yet.</dd>
+                <dt>Total cost</dt>
+                <dd>The sum of all edge weights along a path.</dd>
+            </dl>
         </section>
     </main>
-
+    <script src="js/instructions.js"></script>
+    <script src="js/game.js"></script>
 </body>
+
+</html>
