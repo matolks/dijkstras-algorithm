@@ -47,11 +47,18 @@ body {
 
 /* HERO */
 .hero {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.96), rgba(20, 184, 166, 0.9));
     color: #fff;
     padding: 88px 0 72px;
     text-align: center;
     box-shadow: var(--shadow-main);
+}
+
+.hero.normal{
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.96), rgba(20, 184, 166, 0.9));
+}
+
+.hero.inverted{
+    background: linear-gradient(135deg,  rgba(20, 184, 166, 0.9), rgba(37, 99, 235, 0.96));
 }
 
 .eyebrow {
@@ -84,6 +91,38 @@ body {
 /* MAIN */
 main {
     padding: 52px 0 80px;
+}
+
+/* NAVIGATION */
+.corner-cta {
+    position: fixed;
+    top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: rgba(255, 255, 255, 0.95);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    transition: 0.2s ease;
+    z-index: 1000;
+}
+
+.corner-cta.right {
+    right: 20px;
+}
+
+.corner-cta.left {
+    left: 20px;
+}
+
+.corner-cta:hover {
+    transform: translateY(-2px);
+    background: var(--color-primary-dark);
 }
 
 /* PANELS/CARDS */
