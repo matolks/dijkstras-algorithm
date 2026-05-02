@@ -938,7 +938,7 @@ strong {
 /* FIXED STICKY PANEL */
 .sticky-reference {
     position: sticky;
-    top: 0;                         
+    top: 5vh;                         
     align-self: start;
     max-height: 100vh;              
     overflow-y: auto;
