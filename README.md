@@ -2,34 +2,34 @@
 
 A technical communication website explaining route optimization through Dijkstra’s Algorithm using both a technical description and an instructional set.
 
-The project focuses on showing the difference between explaining how a system works and guiding a user through how to perform a process.
+The project separates system-level explanation from task-based instruction.
 
 ---
 
 ## Overview
 
-This project is divided into two main parts:
+This project is divided into two parts:
 
 - **Technical Description:** Explains how route optimization works in navigation systems.
 - **Instructional Set:** Guides users through manually applying Dijkstra’s Algorithm to a weighted graph.
 
-The technical description focuses on system-level understanding. The instructional set focuses on task completion.
+The technical description focuses on how the system works. The instructional set focuses on how a user performs the process.
 
 ---
 
 ## Technical Description
 
-The technical description explains how road networks can be represented as weighted graphs, where intersections are nodes, roads are edges, and travel costs are weights.
+Explains how road networks can be represented as weighted graphs, where intersections are nodes, roads are edges, and travel costs are weights.
 
-It focuses on what the system is, how its parts relate, and how Dijkstra’s Algorithm produces a shortest path.
+This section focuses on system components, relationships, and shortest-path computation.
 
 ---
 
 ## Instructional Set
 
-The instructional set provides a step-by-step guide for manually finding the shortest path in a weighted graph.
+Provides a step-by-step guide for manually finding the shortest path in a weighted graph.
 
-It focuses on user action, required materials, constraints, checks, and common mistakes.
+This section focuses on user actions, required materials, constraints, checks, and common mistakes.
 
 ---
 
