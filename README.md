@@ -1,201 +1,59 @@
 # Route Optimization with Dijkstra’s Algorithm
 
+A technical communication website explaining route optimization through Dijkstra’s Algorithm using both a technical description and an instructional set.
+
+The project focuses on showing the difference between explaining how a system works and guiding a user through how to perform a process.
+
+---
+
 ## Overview
 
-This project combines a **technical description** and an **instructional set** to explain and apply route optimization in modern navigation systems.
+This project is divided into two main parts:
 
-It first explains how road networks are modeled as **weighted graphs** and how **Dijkstra’s Algorithm** computes the shortest path. It then provides a **step-by-step, usability-centered guide** that allows a user to manually perform the same process.
+- **Technical Description:** Explains how route optimization works in navigation systems.
+- **Instructional Set:** Guides users through manually applying Dijkstra’s Algorithm to a weighted graph.
 
-The goal is to move from **understanding → execution**.
-
----
-
-## Part 1 — Technical Description
-
-### Key Concepts
-
-#### Weighted Graphs
-
-- **Nodes** → intersections or endpoints
-- **Edges** → roads connecting nodes
-- **Weights** → travel cost (time, distance, traffic)
-
-#### Dijkstra’s Algorithm
-
-The algorithm finds the shortest path from a starting node to all other nodes by:
-
-1. Initializing distances (start = 0, others = ∞)
-2. Selecting the smallest unvisited node
-3. Updating neighboring nodes (relaxation)
-4. Repeating until the destination is finalized
+The technical description focuses on system-level understanding. The instructional set focuses on task completion.
 
 ---
 
-### What the System Does
+## Technical Description
 
-#### 1. Graph Representation
+The technical description explains how road networks can be represented as weighted graphs, where intersections are nodes, roads are edges, and travel costs are weights.
 
-- Converts a road layout into a weighted graph
-- Preserves spatial relationships and connectivity
-
-#### 2. Step-by-Step Computation
-
-- Tracks shortest known distances
-- Continuously updates routes as better paths are found
-
-#### 3. Route Optimization
-
-- Produces the lowest-cost path between locations
-- Equivalent to navigation system routing behavior
-
-#### 4. Real-World Constraints
-
-- Traffic conditions
-- Road closures / one-way systems
-- Continuous recalculation
+It focuses on what the system is, how its parts relate, and how Dijkstra’s Algorithm produces a shortest path.
 
 ---
 
-## Part 2 — Instructional Set
+## Instructional Set
 
-**How to Find the Shortest Path Using Dijkstra’s Algorithm**
+The instructional set provides a step-by-step guide for manually finding the shortest path in a weighted graph.
 
-### Purpose
-
-Manually compute the shortest path between two nodes using a weighted graph.
+It focuses on user action, required materials, constraints, checks, and common mistakes.
 
 ---
 
-### Materials
+## Features
 
-- Weighted graph
-- Distance table (Node | Distance | Previous | Status)
-- Method for marking visited nodes
-
----
-
-### Constraints
-
-- All edge weights must be **non-negative**
-- Graph and table must be visible simultaneously
-
----
-
-## Step-by-Step Procedure
-
-### Step 1 — Initialize the Table
-
-- Set starting node distance = **0**
-- Set all other nodes = **∞**
-- Leave previous nodes blank
-- Mark all nodes as unvisited
-
-**Check:** Only the start node has a known distance
-
----
-
-### Step 2 — Select the Current Node
-
-- Choose the **unvisited node with the smallest current distance**
-
----
-
-### Step 3 — Update Neighboring Nodes
-
-For each neighbor:
-
-- Compute:  
-  `new distance = current node distance + edge weight`
-- If the new distance is smaller, update:
-  - Distance
-  - Previous node
-
----
-
-### Step 4 — Mark Node as Visited
-
-- Mark the current node as finalized
-- Do not revisit it
-
----
-
-### Step 5 — Repeat
-
-- Return to Step 2
-- Continue until the destination node has the smallest distance
-
----
-
-### Step 6 — Stop Condition
-
-- Stop when the destination node is selected as the smallest unvisited node
-
----
-
-### Step 7 — Trace the Path
-
-- Follow **previous nodes backward** from destination to start
-
-**Output:**
-
-- Shortest path
-- Total travel cost
-
----
-
-## Example Result
-
-Shortest path:  
-**A → B → D → E**
-
-Total cost:  
-**11**
-
----
-
-## Troubleshooting / FAQ
-
-| Issue                        | Cause                                                     | Fix                                            |
-| ---------------------------- | --------------------------------------------------------- | ---------------------------------------------- |
-| Picking wrong node           | Choosing smallest edge instead of smallest total distance | Always compare current distances               |
-| Distances stay ∞             | Initialization error                                      | Ensure start node = 0                          |
-| Incorrect final path         | Previous nodes not updated correctly                      | Re-check update step                           |
-| Algorithm gives wrong result | Negative edge weights                                     | Use a different algorithm (e.g., Bellman-Ford) |
-
----
-
-## Interactive Component
-
-This project includes:
-
-- Step-by-step algorithm visualization
-- Live distance updates
-- Practice graph for user application
+- Technical description page
+- Step-by-step instructional guide
+- Interactive Dijkstra’s Algorithm visualization
+- Responsive web layout
+- Clear separation between conceptual explanation and procedural instruction
 
 ---
 
 ## Tech Stack
 
-- HTML — structure and diagrams
-- CSS — layout and usability design
-- JavaScript — algorithm simulation and interaction
+- **HTML:** Page structure and content organization
+- **CSS:** Styling, layout, and visual hierarchy
+- **JavaScript:** Interactive behavior and algorithm visualization
 
 ---
 
 ## Project Structure
 
-- `index.html` → Technical description
-- `instructions.html` → Instructional set
-- `main.css` → Styling and layout
-- `*.js` → Interactive behavior
-
----
-
-## Summary
-
-This project demonstrates both:
-
-- **Conceptual understanding** of shortest path algorithms
-- **Procedural execution** through a structured instructional guide
-
-It mirrors how real navigation systems compute and apply optimal routes.
+- `index.html` — Technical description page
+- `instructions.html` — Instructional set page
+- `main.css` — Shared styling and layout
+- `*.js` — Interactive behavior and visualization logic
