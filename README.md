@@ -2,8 +2,6 @@
 
 A technical communication website explaining route optimization through Dijkstra’s Algorithm using both a technical description and an instructional set.
 
-The project separates system-level explanation from task-based instruction.
-
 ---
 
 ## Overview
